@@ -69,3 +69,9 @@ my_account_DB.search_public("0003").withdraw(100)
 print(my_account_DB)
 my_account_DB.search_public("0010").deposit(50)
 print(my_account_DB)
+
+# My test cases
+del_acc_num = "0000"
+my_account_DB.delete(del_acc_num)
+print(f"\nOur database\n{my_account_DB}\n")
+print(f"Check if account {del_acc_num} was actually deleted from our database\n{my_account_DB.search_public(del_acc_num)}")
