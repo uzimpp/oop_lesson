@@ -2,7 +2,7 @@ import csv, os
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
+    
 cities = []
 with open(os.path.join(__location__, 'Cities.csv')) as f:
     rows = csv.DictReader(f)
@@ -15,40 +15,39 @@ with open(os.path.join(__location__, 'Countries.csv')) as f:
     for r in rows:
         countries.append(dict(r))
 
-# Print the average temperature of all the cities
-print("The average temperature of all the cities:")
-temps = []
-for city in cities:
-    temps.append(float(city['temperature']))
-print(sum(temps)/len(temps))
-print()
-
-# Print all cities in Italy
-temps = []
-my_country = 'Italy'
-for city in cities:
-    if city['country'] == my_country:
-        temps.append(city['city'])
-print("All the cities in", my_country, ":")
-print(temps)
-print()
-
-# Print the average temperature for all the cities in Italy
-# Write code for me
-
-# Print the max temperature for all the cities in Italy
-# Write code for me
-
-# Let's write a function to filter out only items that meet the condition
 def filter(condition, dict_list):
-    pass
+    filtered_list = []
+    for item in dict_list:
+        if condition(item):
+            filtered_list.append(item)
+    return filtered_list
 
-# Let's write a function to do aggregation given an aggregation function and an aggregation key
 def aggregate(aggregation_key, aggregation_function, dict_list):
-    pass
+    out = []
+    for item in dict_list:
+        out.append(float(item[aggregation_key]))
+    return aggregation_function(out)
 
-# Let's write code to
+_avg = lambda x: sum(x) / len(x)
+_max = lambda x: max(x)
+_min = lambda x: min(x)
+
+scope_data1 = filter(lambda x: x['country'] == 'Italy', cities)
+scope_data2 = filter(lambda x: x['country'] == 'Sweden', cities)
+
 # - print the average temperature for all the cities in Italy
+print("The average temperature for all the cities in Italy is: ")
+print(aggregate("temperature", _avg, scope_data1))
+print()
 # - print the average temperature for all the cities in Sweden
+print("The average temperature of all the cities in Sweden:")
+print(aggregate("temperature", _avg, scope_data2))
+print()
 # - print the min temperature for all the cities in Italy
+print("The average temperature of all the cities in Italy:")
+print(aggregate("temperature", _min, scope_data1))
+print()
 # - print the max temperature for all the cities in Sweden
+print("The average temperature of all the cities in Sweden:")
+print(aggregate("temperature", _max, scope_data2))
+print()
