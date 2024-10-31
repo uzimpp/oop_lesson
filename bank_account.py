@@ -67,7 +67,7 @@ my_account_DB.search_public("0003").deposit(50)
 print(my_account_DB)
 my_account_DB.search_public("0003").withdraw(100)
 print(my_account_DB)
-my_account_DB.search_public("0010").deposit(50)
+my_account_DB.search_public("0001").deposit(50)
 print(my_account_DB)
 
 # My test cases
