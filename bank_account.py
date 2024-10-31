@@ -29,9 +29,11 @@ class AccountDB:
         
     def delete(self, account_num):
         i = self.__search_private(account_num)
-        if i == -1:
-            return None
-        del self.account_database[i]
+        if i != -1:
+            print("Deleting account:", self.account_database[i])
+            del self.account_database[i]
+        else:
+            print(account_num, "invalid account number; nothing to be deleted.")
         
 class Account:
     def __init__(self, num, type, account_name, balance):
@@ -71,6 +73,7 @@ my_account_DB.search_public("0001").deposit(50)
 print(my_account_DB)
 
 # My test cases
+print()
 del_acc_num = "0000"
 my_account_DB.delete(del_acc_num)
 print(f"\nOur database\n{my_account_DB}\n")
