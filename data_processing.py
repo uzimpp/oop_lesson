@@ -1,40 +1,106 @@
 import csv, os
 
-class Travel:
-    def __init__(self, dict_list=[]) -> None:
-        self.dict_list = dict_list
+class TableDB:
+    def __init__(self):
+        self.table_database = []
+        self.__location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        self.__cities = []
+        with open(os.path.join(self.__location, 'Cities.csv')) as f:
+            rows = csv.DictReader(f)
+            for r in rows:
+                self.__cities.append(dict(r))
+        self.__countries = []
+        with open(os.path.join(self.__location, 'Countries.csv')) as f:
+            rows = csv.DictReader(f)
+            for r in rows:
+                self.__countries.append(dict(r))
+
+    @property
+    def location(self):
+        return self.__location
+
+    @property
+    def cities(self):
+        return self.__cities
+
+    @property
+    def countries(self):
+        return self.__countries
+
+    def insert(self, table):
+        if self.search(table) is None:
+            self.table_database.append(table)
+
+    def search(self, table_name):
+        for tab in self.table_database:
+            if tab == table_name:
+                return tab
+        return None
+
+class Table:
+    def __init__(self, table_name, table):
+        self.__table = table
+        self.__table_name = table_name
+
+    @property
+    def table(self):
+        return self.__table
+    
+    @table.setter
+    def table(self, lst):
+        self.__table = lst
+
+    @property
+    def table_name(self):
+        return self.__table_name
+    
+    @table_name.setter
+    def table_name(self, name):
+        self.__table_name = name
 
     def filter(self, condition):
         filtered_list = []
-        for item in self.dict_list:
+        for item in self.__table:
             if condition(item):
                 filtered_list.append(item)
-        self.dict_list = filtered_list
+        self.__table = filtered_list
     
     def aggregate(self, aggregation_key, aggregation_function):
         out = []
-        for item in self.dict_list:
+        for item in self.__table:
             out.append(float(item[aggregation_key]))
         return aggregation_function(out)
 
-# get data
-_location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-_cities = []
-with open(os.path.join(_location, 'Cities.csv')) as f:
+    def __str__(self):
+        out = ""
+        for item in self.__table:
+            for key, value in item.items():
+                    out += f"{key} {value}"
+            out += "\n"
+        return out
+
+location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+tab1 = []
+with open(os.path.join(location, 'Countries.csv')) as f:
     rows = csv.DictReader(f)
     for r in rows:
-        _cities.append(dict(r))
-_countries = []
-with open(os.path.join(_location, 'Countries.csv')) as f:
+        tab1.append(dict(r))
+tab2 = []
+with open(os.path.join(location, 'Countries.csv')) as f:
     rows = csv.DictReader(f)
     for r in rows:
-        _countries.append(dict(r))
+        tab2.append(dict(r))
 
 # init class
-italy = Travel(_cities)
-sweden = Travel(_cities)
-italy.filter(lambda x: x['country'] == 'Italy')
-sweden.filter(lambda x: x['country'] == 'Sweden')
+tabdb = TableDB()
+tabdb.insert(tab1)
+tabdb.insert(tab2)
+
+italy = Table('Italy', tabdb.cities)
+italy.filter(lambda x: x["country"] == "Italy")
+
+sweden = Table('Sweden', tabdb.cities)
+sweden.filter(lambda x: x["country"] == "Sweden")
 
 _avg = lambda x: sum(x) / len(x)
 _max = lambda x: max(x)
